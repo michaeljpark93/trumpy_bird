@@ -1,0 +1,29 @@
+{
+  "name": "Trailing Lights",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack --watch --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaeljpark93/E.coli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaeljpark93/E.coli/issues"
+  },
+  "homepage": "https://github.com/michaeljpark93/E.coli#readme",
+  "dependencies": {
+    "lodash": "^4.17.10",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
+  }
+}
