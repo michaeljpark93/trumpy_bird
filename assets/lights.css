@@ -25,11 +25,13 @@ time, mark, audio, video {
 }
 
 canvas {
-  border: 1px solid gray;
+  border: none;
   /* background-color: black; */
 }
 
 #credit {
 	font-size: 8px;
+	position: fixed;
+	bottom: 5px;
 	
 }
