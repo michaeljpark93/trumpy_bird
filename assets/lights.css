@@ -26,6 +26,5 @@ time, mark, audio, video {
 
 canvas {
   border: 1px solid gray;
-  padding: 50px;
   /* background-color: black; */
 }
