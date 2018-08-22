@@ -28,3 +28,8 @@ canvas {
   border: 1px solid gray;
   /* background-color: black; */
 }
+
+#credit {
+	font-size: 8px;
+	
+}
