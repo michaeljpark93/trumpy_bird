@@ -24,14 +24,31 @@ time, mark, audio, video {
 	font: inherit;
 }
 
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 canvas {
   border: none;
+  ;
   /* background-color: black; */
+}
+
+.hide {
+	display: none;
 }
 
 #credit {
 	font-size: 8px;
 	position: fixed;
 	bottom: 5px;
-	
+	left: 10px;
+}
+
+#start {
+	position: absolute;
+	top: 400;
+	left: 500;
 }
