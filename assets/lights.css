@@ -48,7 +48,7 @@ canvas {
 }
 
 #start {
-	position: absolute;
+	position: fixed;
 	top: 400;
 	left: 500;
 }
