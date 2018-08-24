@@ -8,26 +8,19 @@
   </head>
   <body>
     <link rel="stylesheet" type = "text/css" href = "./assets/trumpy_bird.css" />
+    
     <div class="main">
       <canvas id="canvas"></canvas>
     </div>
 
     <div class="button-holder">
       <div class="button-box">
-        <button id="start-button" onclick="hideButtons()"></button>
+        <button id="start-button"></button>
         <a href="https://github.com/michaeljpark93/trumpy_bird"><button id="github"></button></a>
         <a href="https://www.linkedin.com/in/michaeljpark93/"><button id="linkedin"></button></a>
       </div>
     </div>
-
-    <script>
-        function hideButtons() {
-          const action = document.getElementsByTagName('button');
-          for (let i = 0; i < action.length; i++) {
-            action[i].setAttribute("class", "hide");
-          }
-        }
-    </script>
+    <div id="click-handler"></div>
 
     <script type="application/javascript" src="./dist/bundle.js"></script>
     <a id="credit" target="_blank" href="https://www.vecteezy.com">Vector illustration credit: Vecteezy!</a>

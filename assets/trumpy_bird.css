@@ -30,6 +30,12 @@ time, mark, audio, video {
 	align-items: center;
 }
 
+#click-handler {
+	display: none;
+	width: 1600px;
+	height: 1200px;
+}
+
 canvas {
   border: none;
 }
