@@ -359,7 +359,7 @@ class GameView {
         this.readyScreen = options.readyScreen;
         this.game = options.game;
         this.gameView = 0;
-        this.speed = 7;
+        this.speed = 8;
         this.score = 0;
         this.xPos = 0;
         this.x2Pos = window.innerWidth;
@@ -367,6 +367,7 @@ class GameView {
         this.backgroundFlipped = new Image();
         this.background.src = "./assets/bg5.jpg";
         this.backgroundFlipped.src = "./assets/bg5-flipped.jpg";
+        this.gameOverSound = new Audio("./assets/audio/die.wav");
     }
 
     start(canvasEl) {
@@ -445,6 +446,7 @@ class GameView {
     }
 
     renderGameOver(ctx) {
+        this.gameOverSound.play();
         let gameOver = new _game_over_js__WEBPACK_IMPORTED_MODULE_1__["default"](this.score, this.game);
         this.speed = 0;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -468,8 +470,11 @@ class GameView {
 
     getScore(ctx) {
         ctx.font = "60px Electrolize";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 10;
         ctx.fillStyle = "white";
-        ctx.fillText(this.score, window.innerWidth / 2 - 60, 100)
+        ctx.strokeText(this.score, window.innerWidth / 2 - 60, 100);
+        ctx.fillText(this.score, window.innerWidth / 2 - 60, 100);
     }
 }
 
