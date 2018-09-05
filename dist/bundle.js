@@ -359,7 +359,7 @@ class GameView {
         this.readyScreen = options.readyScreen;
         this.game = options.game;
         this.gameView = 0;
-        this.speed = 8;
+        this.speed = 7.5;
         this.score = 0;
         this.xPos = 0;
         this.x2Pos = window.innerWidth;
@@ -368,6 +368,8 @@ class GameView {
         this.background.src = "./assets/bg5.jpg";
         this.backgroundFlipped.src = "./assets/bg5-flipped.jpg";
         this.gameOverSound = new Audio("./assets/audio/die.wav");
+        this.pointSound = new Audio("./assets/audio/kaching.m4a");
+        this.backgroundMusic = new Audio("./assets/audio/background.wav");
     }
 
     start(canvasEl) {
@@ -378,6 +380,7 @@ class GameView {
         const animateCallback = () => {
             this.frame = requestAnimationFrame(animateCallback);
             this.renderBackground(ctx);
+            this.backgroundMusic.play();
 
             switch(this.gameView) {
                 case 0:
@@ -466,6 +469,7 @@ class GameView {
     addScore() {
         if (this.game.trump.pos[0] > (this.game.enemies[0].x - this.game.enemies[0].width) && 
         this.game.trump.pos[0] < (this.game.enemies[0].x - this.game.enemies[0].width) + 5) this.score++;
+        this.pointSound.play();
     }
 
     getScore(ctx) {
@@ -560,7 +564,7 @@ class Trump {
         this.moveCounter = 0;
         this.radius = 35;
         this.velocity = 0;
-        this.gravity = .45;
+        this.gravity = .40;
         this.lift = 9;
         this.gameOver = false;
         this.trump = new Image();
@@ -600,7 +604,11 @@ class Trump {
     }
 
     jump() {
+      if (this.gameOver) {
+        return this.velocity;
+      } else {
         this.velocity = this.lift;
+      }
     }
 
     fall(window) {
