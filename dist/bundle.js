@@ -376,11 +376,11 @@ class GameView {
         let ctx = canvasEl.getContext('2d');
         canvasEl.width = window.innerWidth - 20;
         canvasEl.height = window.innerHeight - 20;
+        this.backgroundMusic.play();
 
         const animateCallback = () => {
             this.frame = requestAnimationFrame(animateCallback);
             this.renderBackground(ctx);
-            this.backgroundMusic.play();
 
             switch(this.gameView) {
                 case 0:
