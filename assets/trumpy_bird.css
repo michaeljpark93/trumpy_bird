@@ -44,6 +44,22 @@ canvas {
 	display: none;
 }
 
+.background {
+  display: none;
+  position: fixed;
+  overflow: hidden;
+  margin: 0 auto;
+  width: 98vw;
+  height: 95vh;
+  right: 5px;
+  z-index: 2;
+  background-color: red;
+}
+
+#show {
+  display: block;
+}
+
 .button-holder {
 	position: fixed;
 	bottom: 50px;

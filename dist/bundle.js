@@ -147,8 +147,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let canvasEl = document.getElementById('canvas');
-let startGame = document.getElementById('start-button');
+let canvasEl = document.getElementById("canvas");
+let startGame = document.getElementById("start-button");
+let background = document.getElementsByClassName("background");
 // let readyScreenEl = document.getElementsByClassName('ready-screen');
 
 let game = new _game_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
@@ -159,30 +160,39 @@ let gameViewOptions = { game, readyScreen };
 let gameView = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](gameViewOptions);
 gameView.start(canvasEl);
 
-document.onkeyup = (e) => {
-    if (e.keyCode === 32) {
-        if (gameView.gameView === 2) {
-            game.callJump();
-        };
-    };
+document.onkeyup = e => {
+  if (e.keyCode === 32) {
+    if (gameView.gameView === 2) {
+      game.callJump();
+    }
+  }
 };
 
 const buttonFunction = () => {
-    gameView.gameStart();
+  gameView.gameStart();
 
-    const action = document.getElementsByTagName("button");
-    for (let i = 0; i < action.length; i++) {
-        action[i].setAttribute("class", "hide");
-    };
-}
+  const action = document.getElementsByTagName("button");
+  for (let i = 0; i < action.length; i++) {
+    action[i].setAttribute("class", "hide");
+  }
+  backgroundHandler();
+};
 
-document.onclick = (e) => {
-    if (e.target === startGame) {
-        buttonFunction();
-    } else {
-        gameView.renderStartGame();
-    }
-}
+const backgroundHandler = () => {
+  background.setAttribute("id", "show");
+  background.addEventListener("click", () => {
+    gameView.renderStartGame();
+  });
+};
+
+document.onclick = e => {
+  if (e.target === startGame) {
+    buttonFunction();
+    // } else {
+    //     gameView.renderStartGame();
+    // }
+  }
+};
 
 // startGame.addEventListener("click", () => {
 //     startGame.removeEventListener("click", buttonFunction())
@@ -197,7 +207,7 @@ document.onclick = (e) => {
 // });
 
 // readyScreenEl.onkeyup = (e) => {
-//     if (e.keyCode == 32) { 
+//     if (e.keyCode == 32) {
 //         () => gameView.renderStartGame();
 //         readyScreen.setAttribute("class", "play-screen");
 //     };
@@ -206,10 +216,11 @@ document.onclick = (e) => {
 // let playScreen = document.getElementsByClassName("play-screen");
 // playScreen.addEventListener('click', () => game.callJump());
 // playScreen.onkeyup = (e) => {
-//     if (e.keyCode == 32) { 
+//     if (e.keyCode == 32) {
 //         () => game.callJump();
 //     };
 // };
+
 
 /***/ }),
 
