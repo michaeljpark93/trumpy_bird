@@ -145,6 +145,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const canvasEl = document.getElementById('canvas');
+canvasEl.width = window.innerWidth - 20;
+canvasEl.height = window.innerHeight - 20;
 const startGame = document.getElementById('start-button');
 const background = document.getElementsByClassName('background');
 // let readyScreenEl = document.getElementsByClassName('ready-screen');
@@ -369,10 +371,10 @@ class GameView {
     this.readyScreen = options.readyScreen;
     this.game = options.game;
     this.gameView = 0;
-    this.speed = 7.5;
     this.score = 0;
-    this.xPos = 0;
-    this.x2Pos = window.innerWidth;
+    this.speed = 7;
+    this.bgPos = 0;
+    this.bg2Pos = window.innerWidth - 20;
     this.background = new Image();
     this.backgroundFlipped = new Image();
     this.background.src = './assets/bg5.jpg';
@@ -384,8 +386,6 @@ class GameView {
 
   start(canvasEl) {
     const ctx = canvasEl.getContext('2d');
-    canvasEl.width = window.innerWidth - 20;
-    canvasEl.height = window.innerHeight - 20;
     this.backgroundMusic.play();
 
     const animateCallback = () => {
@@ -393,14 +393,14 @@ class GameView {
       this.renderBackground(ctx);
 
       switch (this.gameView) {
-        case 0:
-          this.renderStartScreen(ctx);
-          break;
         case 1:
           this.readyScreen.draw();
           break;
         case 2:
           this.renderPlayScreen(ctx);
+          break;
+        default:
+          this.renderStartScreen(ctx);
           break;
       }
     };
@@ -411,6 +411,7 @@ class GameView {
     this.gameView = 1;
   }
 
+  // Trumpy Bird intro screen view
   renderStartScreen(ctx) {
     this.startScreen.draw(ctx);
     this.game.trump.drawStart(ctx);
@@ -448,14 +449,16 @@ class GameView {
   }
 
   renderBackground(ctx) {
-    this.xPos -= this.speed;
-    this.x2Pos -= this.speed;
+    const width = window.innerWidth - 20;
+    const height = window.innerHeight - 20;
+    this.bgPos -= this.speed;
+    this.bg2Pos -= this.speed;
 
-    ctx.drawImage(this.background, this.xPos, 0, window.innerWidth, window.innerHeight);
-    ctx.drawImage(this.backgroundFlipped, this.x2Pos, 0, window.innerWidth, window.innerHeight);
+    ctx.drawImage(this.background, this.bgPos, 0, width, height);
+    ctx.drawImage(this.backgroundFlipped, this.bg2Pos, 0, width, height);
 
-    if (this.x2Pos < -window.innerWidth) this.x2Pos = -this.x2Pos - 15;
-    if (this.xPos < -window.innerWidth) this.xPos = -this.xPos - 15;
+    if (this.bg2Pos < -width) this.bg2Pos = -this.bg2Pos;
+    if (this.bgPos < -width) this.bgPos = -this.bgPos;
   }
 
   renderGameOver(ctx) {
