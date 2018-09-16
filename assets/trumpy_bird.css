@@ -30,11 +30,11 @@ time, mark, audio, video {
 	align-items: center;
 }
 
-#click-handler {
+/* #click-handler {
 	display: none;
-	width: 1600px;
-	height: 1200px;
-}
+	width: 99vw;
+	height: 80vh;
+} */
 
 canvas {
   border: none;
@@ -62,65 +62,51 @@ canvas {
 
 .button-holder {
 	position: fixed;
-	bottom: 50px;
-	left: 370px;
-	margin: 0 auto;
+  top: 55%;
+  left: -50px;
+  right: 0;
+  margin: 0 auto;
 	width: 500px;
-	height: 200px;
-}
-
-.button-box {
-	display: flex;
+  height: 100px;
+  display: flex;
 	justify-content: space-around;
-	align-items: flex-end;
-	flex-flow: row nowrap;
+	align-items: center;
+  flex-flow: row nowrap;
 }
 
-#start-button:focus {
-	outline: none;
-}
-
-#start-button {
-	border: none;
+button {
+  border: none;
 	border-radius: 15px;
 	width: 130px;
-	height: 70px;
-	background-image: url("play.png");
-	background-size: 100%;
+  height: 70px;
+  margin: 10px;
+  align-content: center;
+  background-color: white;
+	background-size: 40%;
 	background-repeat: no-repeat;
-	background-position: center center;
+  background-position: center center;
+  cursor: pointer;
 }
 
-#github:focus {
-	outline: none;
+button:hover {
+  background-color: rgb(223, 223, 223);
+  border: none;
 }
 
-#github {
-	border: none;
-	border-radius: 15px;
-	width: 130px;
-	height: 70px;
+button:focus {
+  outline: none;
+}
+
+.start {
+  background-image: url("play.png");
+}
+
+.github {
 	background-image: url("GitHub.png");
-	align-content: center;
-	background-size: 40%;
-	background-repeat: no-repeat;
-	background-position: center center;
 }
 
-#linkedin:focus {
-	outline: none;
-}
-
-#linkedin {
-	border: none;
-	border-radius: 15px;
-	width: 130px;
-	height: 70px;
+.linkedin {
 	background-image: url("linkedin.png");
-	align-content: center;
-	background-size: 40%;
-	background-repeat: no-repeat;
-	background-position: center center;
 }
 
 #credit {
@@ -129,62 +115,4 @@ canvas {
 	bottom: 5px;
   left: 10px;
   color: gray;
-}
-
-.speaker {
-	height: 30px;
-	width: 30px;
-	position: relative;
-	overflow: hidden;
-  display: inline-block;
-  z-index: 2;
-
-	span {
-		display: block;
-		width: 8px;
-		height: 8px;
-		background: #fff;
-		margin: 11px 0 0 2px;
-
-		&:after {
-			content: '';
-			position: absolute;
-			width: 0;
-			height: 0;
-			border-style: solid;
-			border-color: transparent #fff transparent transparent;
-			border-width: 10px 14px 10px 15px;
-			left: -13px;
-			top: 5px;
-		}
-
-		&:before {
-			transform: rotate(45deg);
-			border-radius: 0 50px 0 0;
-			content: '';
-			position: absolute;
-			width: 5px;
-			height: 5px;
-			border-style: double;
-			border-color: #fff;
-			border-width: 7px 7px 0 0;
-			left: 18px;
-			top: 9px;
-			transition: all 0.2s ease-out;
-		}
-	}
-
-	&:hover {
-
-		span:before {
-			transform: scale(.8) translate(-3px, 0) rotate(42deg);		
-    }
-	}
-  
-  &.mute {
-    span:before {
-			transform: scale(.5) translate(-15px, 0) rotate(36deg);
-      opacity: 0;
-    }
-  }
 }
