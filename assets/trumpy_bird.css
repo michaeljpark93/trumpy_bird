@@ -27,33 +27,33 @@ time, mark, audio, video {
 .main {
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: flex-start;
 }
-
-/* #click-handler {
-	display: none;
-	width: 99vw;
-	height: 80vh;
-} */
 
 canvas {
   border: none;
 }
 
-.hide {
-	display: none;
+#hide {
+  position: absolute;
+  top: -9999px !important;
+  left: -9999px !important;
 }
 
-.background {
-  display: none;
+.ready-view, .play-view {
   position: fixed;
-  overflow: hidden;
   margin: 0 auto;
   width: 98vw;
-  height: 95vh;
-  right: 5px;
+  height: 97vh;
   z-index: 2;
-  background-color: red;
+}
+
+.play-view {
+  position: fixed;
+  margin: 0 auto;
+  width: 98vw;
+  height: 97vh;
+  z-index: 2;
 }
 
 #show {

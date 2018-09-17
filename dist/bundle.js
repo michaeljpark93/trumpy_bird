@@ -117,9 +117,8 @@ class Enemy {
   }
 
   beaten() {
-    if (this.x < -this.width) {
-      return true;
-    } return false;
+    if (this.x < -this.width) return true;
+    return false;
   }
 }
 
@@ -137,9 +136,9 @@ class Enemy {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _game_view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_view.js */ "./lib/game_view.js");
-/* harmony import */ var _ready_screen_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ready_screen.js */ "./lib/ready_screen.js");
-/* harmony import */ var _game_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game.js */ "./lib/game.js");
+/* harmony import */ var _game_view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_view */ "./lib/game_view.js");
+/* harmony import */ var _ready_screen__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ready_screen */ "./lib/ready_screen.js");
+/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game */ "./lib/game.js");
 
 
 
@@ -147,78 +146,65 @@ __webpack_require__.r(__webpack_exports__);
 const canvasEl = document.getElementById('canvas');
 canvasEl.width = window.innerWidth - 20;
 canvasEl.height = window.innerHeight - 20;
-const startGame = document.getElementById('start-button');
-const background = document.getElementsByClassName('background');
-// let readyScreenEl = document.getElementsByClassName('ready-screen');
 
-const game = new _game_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+const game = new _game__WEBPACK_IMPORTED_MODULE_2__["default"]();
 const options = { canvasEl, game };
-const readyScreen = new _ready_screen_js__WEBPACK_IMPORTED_MODULE_1__["default"](options);
+const readyScreen = new _ready_screen__WEBPACK_IMPORTED_MODULE_1__["default"](options);
 
 const gameViewOptions = { game, readyScreen };
-const gameView = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](gameViewOptions);
+const gameView = new _game_view__WEBPACK_IMPORTED_MODULE_0__["default"](gameViewOptions);
 gameView.start(canvasEl);
 
-document.onkeyup = (e) => {
-  if (e.keyCode === 32) {
-    if (gameView.gameView === 2) {
-      game.callJump();
-    }
-  }
-};
+let startRV = false;
+let startPV = false;
+const startGame = document.getElementsByClassName('start')[0];
+const readyView = document.getElementsByClassName('ready-view')[0];
+const playView = document.getElementsByClassName('play-view')[0];
 
-const buttonFunction = () => {
+function playViewHandler(e) {
+  if (e.target === e.currentTarget || e.which === 32) {
+    game.callJump();
+  }
+}
+
+function readyViewHandler(e) {
+  if (e.target === e.currentTarget || e.which === 32) {
+    startRV = false;
+    startPV = true;
+    gameView.renderStartGame();
+  }
+
+  if (startPV) {
+    readyView.setAttribute('id', 'hide');
+    readyView.removeEventListener('click', readyViewHandler, false);
+    document.removeEventListener('keyup', readyViewHandler, false);
+
+    playView.removeAttribute('id');
+    playView.addEventListener('click', playViewHandler, false);
+    document.addEventListener('keyup', playViewHandler, false);
+  }
+}
+
+const startGameFunction = (e) => {
+  if (e.target === e.currentTarget) {
+    startRV = true;
+  }
   gameView.gameStart();
 
-  const action = document.getElementsByTagName('button');
-  for (let i = 0; i < action.length; i++) {
-    action[i].setAttribute('class', 'hide');
-  }
-  backgroundHandler();
-};
+  if (startRV) {
+    const buttons = document.getElementsByTagName('button');
+    for (let i = 0; i < buttons.length; i += 1) {
+      buttons[i].setAttribute('id', 'hide');
+    }
+    startGame.removeEventListener('click', startGameFunction, false);
 
-const backgroundHandler = () => {
-  background.setAttribute('id', 'show');
-  background.addEventListener('click', () => {
-    gameView.renderStartGame();
-  });
-};
-
-document.onclick = (e) => {
-  if (e.target === startGame) {
-    buttonFunction();
-    // } else {
-    //     gameView.renderStartGame();
-    // }
+    readyView.removeAttribute('id');
+    readyView.addEventListener('click', readyViewHandler, false);
+    document.addEventListener('keyup', readyViewHandler, false);
   }
 };
 
-// startGame.addEventListener("click", () => {
-//     startGame.removeEventListener("click", buttonFunction())
-//     document.onclick = () => { gameView.renderStartGame() };
-// })
-
-// startGame.addEventListener('click', () => gameView.gameStart());
-
-// readyScreenEl.addEventListener('click', () => {
-//     gameView.renderStartGame();
-//     readyScreenEl.setAttribute("class", "play-screen");
-// });
-
-// readyScreenEl.onkeyup = (e) => {
-//     if (e.keyCode == 32) {
-//         () => gameView.renderStartGame();
-//         readyScreen.setAttribute("class", "play-screen");
-//     };
-// };
-
-// let playScreen = document.getElementsByClassName("play-screen");
-// playScreen.addEventListener('click', () => game.callJump());
-// playScreen.onkeyup = (e) => {
-//     if (e.keyCode == 32) {
-//         () => game.callJump();
-//     };
-// };
+startGame.addEventListener('click', startGameFunction, false);
 
 
 /***/ }),
@@ -243,41 +229,40 @@ class Game {
   constructor() {
     this.screen = new _start_screen_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
     this.gameScreen = 0;
-    this.speed = 7;
     this.trump = this.createTrump();
     this.enemies = [];
+    this.width = window.innerWidth - 20;
+    this.height = window.innerHeight - 20;
   }
 
   createTrump() {
-    const size = window.innerHeight/6;
-    const pos = [window.innerWidth/5, window.innerHeight/2 - size];
-    let trump = new _trump_js__WEBPACK_IMPORTED_MODULE_0__["default"]({ size, pos });
+    const size = this.height / 6;
+    const pos = [this.width / 5, this.height / 2 - size];
+    const trump = new _trump_js__WEBPACK_IMPORTED_MODULE_0__["default"]({ size, pos });
     return trump;
   }
 
   createEnemies() {
-    this.interval = setInterval(() => this.createEnemy(), 1400);
+    this.interval = setInterval(() => this.createEnemy(), 1500);
   }
 
   stopCreateEnemies() {
     clearInterval(this.interval);
   }
 
-  createEnemy() {
-    let pos = [window.innerWidth, window.innerHeight];
-    let speed = this.speed;
-    let nEnemies = 5;
-    let topBot = this.generateEnemyPosition();
-    let options = {pos, speed, nEnemies, topBot};
-    let enemy = new _enemy_js__WEBPACK_IMPORTED_MODULE_1__["default"](options)
+  createEnemy(speed) {
+    const pos = [this.width, this.height];
+    const topBot = this.generateEnemyPosition();
+    const options = { pos, speed, topBot };
+    const enemy = new _enemy_js__WEBPACK_IMPORTED_MODULE_1__["default"](options);
     this.enemies.push(enemy);
   }
 
   generateEnemyPosition() {
-    let height = window.innerHeight - 200;
-    let ratios = [0.25, 0.33, 0.5, 0.67, 0.75];
-    var ratio = ratios[Math.floor(Math.random()*ratios.length)];
-    let topBot = [height * ratio, height * (1 - ratio)];
+    const height = this.height - 200;
+    const ratios = [0.25, 0.33, 0.5, 0.67, 0.75];
+    const ratio = ratios[Math.floor(Math.random() * ratios.length)];
+    const topBot = [height * ratio, height * (1 - ratio)];
     return topBot;
   }
 
@@ -377,6 +362,8 @@ class GameView {
     this.bg2Pos = window.innerWidth - 20;
     this.background = new Image();
     this.backgroundFlipped = new Image();
+    this.enemy = new Image();
+    this.enemy.src = './assets/1.png';
     this.background.src = './assets/bg5.jpg';
     this.backgroundFlipped.src = './assets/bg5-flipped.jpg';
     this.gameOverSound = new Audio('./assets/audio/die.wav');
@@ -416,11 +403,17 @@ class GameView {
     this.startScreen.draw(ctx);
     this.game.trump.drawStart(ctx);
     this.game.trump.move();
+    ctx.drawImage(this.enemy, 100, 0, 100, 100);
+    ctx.drawImage(this.enemy, 100, 100, 100, 100);
+    ctx.drawImage(this.enemy, 100, 200, 100, 100);
+    ctx.drawImage(this.enemy, 100, 300, 100, 100);
+    ctx.drawImage(this.enemy, 100, 400, 100, 100);
+    ctx.drawImage(this.enemy, 100, 500, 100, 100);
   }
 
   renderStartGame() {
     this.gameView = 2;
-    this.game.createEnemies();
+    this.game.createEnemies(this.speed);
   }
 
   renderPlayScreen(ctx) {
@@ -580,10 +573,11 @@ class Trump {
     this.pos = options.pos;
     this.xPos = 0;
     this.moveCounter = 0;
-    this.radius = 35;
     this.velocity = 0;
     this.gravity = 0.4;
-    this.lift = 9;
+    this.lift = 8;
+    this.width = window.innerWidth - 20;
+    this.height = window.innerHeight - 20;
     this.gameOver = false;
     this.trump = new Image();
     this.trumpDead = new Image();
@@ -606,16 +600,16 @@ class Trump {
   }
 
   drawStart(ctx) {
-    const height = window.innerHeight / 5;
-    const width = window.innerWidth / 6;
+    const height = this.height / 5;
+    const width = this.width / 6;
     ctx.drawImage(
       this.trump,
       this.xPos,
       0,
       256,
       256,
-      window.innerWidth / 2 - 135,
-      window.innerHeight / 2 - height + 10,
+      this.width / 2 - 135,
+      this.height / 2 - height + 10,
       width,
       height,
     );
@@ -626,18 +620,15 @@ class Trump {
   }
 
   move() {
-    this.mCounter();
-    if (this.moveCounter % 5 == 0) {
-      if (this.xPos == 1280) {
+    this.moveCounter += 1;
+
+    if (this.moveCounter % 5 === 0) {
+      if (this.xPos === 1280) {
         this.xPos = 0;
       } else {
         this.xPos += 256;
       }
     }
-  }
-
-  mCounter() {
-    this.moveCounter++;
   }
 
   jump() {
@@ -647,12 +638,12 @@ class Trump {
     this.velocity = this.lift;
   }
 
-  fall(window) {
+  fall() {
     this.velocity -= this.gravity;
     this.pos[1] -= this.velocity;
 
-    if (this.pos[1] > window.innerHeight - this.size) {
-      this.pos[1] = window.innerHeight - this.size;
+    if (this.pos[1] > this.height - this.size) {
+      this.pos[1] = this.height - this.size;
       this.velocity = 0;
       this.gameOver = true;
     } else if (this.pos[1] < 0) {
@@ -661,12 +652,9 @@ class Trump {
     }
   }
 
-  collided(enemy, window) {
+  collided(enemy) {
     if (this.pos[0] + this.size - 25 > enemy.x && this.pos[0] + 100 < enemy.x + enemy.width) {
-      if (
-        this.pos[1] + this.size - 20 > window.innerHeight - enemy.bottom
-        || this.pos[1] + 20 < enemy.top
-      ) {
+      if (this.pos[1] + this.size - 20 > this.height - enemy.bottom || this.pos[1] + 20 < enemy.top) {
         this.gameOver = true;
       }
     }
