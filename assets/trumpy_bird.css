@@ -56,10 +56,6 @@ canvas {
   z-index: 2;
 }
 
-#show {
-  display: block;
-}
-
 .button-holder {
 	position: fixed;
   top: 55%;

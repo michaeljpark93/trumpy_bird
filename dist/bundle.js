@@ -97,19 +97,33 @@
 __webpack_require__.r(__webpack_exports__);
 class Enemy {
   constructor(options) {
-    this.width = 130;
+    this.size = 110;
     [this.top, this.bottom] = options.topBot;
     [this.x, this.y] = options.pos;
     this.speed = options.speed;
-    this.image = new Image();
-    this.imageTop = new Image();
-    this.image.src = './assets/pipe-red.png';
-    this.imageTop.src = './assets/pipe-red-flipped.png';
+    this.defeated = false;
+    this.height = window.innerHeight - 20;
+    this.enemy = new Image();
+    this.enemy.src = './assets/1.png';
   }
 
   draw(ctx) {
-    ctx.drawImage(this.imageTop, this.x, 0, this.width, this.top);
-    ctx.drawImage(this.image, this.x, this.y - this.bottom, this.width, this.bottom);
+    this.generateTop(ctx);
+    this.generateBot(ctx);
+  }
+
+  generateTop(ctx) {
+    for (let i = 0; i < this.top; i += 1) {
+      const yPos = i * this.size;
+      ctx.drawImage(this.enemy, this.x, yPos, this.size, this.size);
+    }
+  }
+
+  generateBot(ctx) {
+    for (let i = 0; i < this.bottom; i += 1) {
+      const yPos = i * this.size;
+      ctx.drawImage(this.enemy, this.x, this.height - this.size - yPos, this.size, 110);
+    }
   }
 
   update(speed) {
@@ -117,7 +131,7 @@ class Enemy {
   }
 
   beaten() {
-    if (this.x < -this.width) return true;
+    if (this.x < -this.size) return true;
     return false;
   }
 }
@@ -218,27 +232,28 @@ startGame.addEventListener('click', startGameFunction, false);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _trump_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./trump.js */ "./lib/trump.js");
-/* harmony import */ var _enemy_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./enemy.js */ "./lib/enemy.js");
-/* harmony import */ var _start_screen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./start_screen.js */ "./lib/start_screen.js");
+/* harmony import */ var _trump__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./trump */ "./lib/trump.js");
+/* harmony import */ var _enemy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./enemy */ "./lib/enemy.js");
+/* harmony import */ var _start_screen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./start_screen */ "./lib/start_screen.js");
 
 
 
 
 class Game {
   constructor() {
-    this.screen = new _start_screen_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.screen = new _start_screen__WEBPACK_IMPORTED_MODULE_2__["default"]();
     this.gameScreen = 0;
-    this.trump = this.createTrump();
     this.enemies = [];
     this.width = window.innerWidth - 20;
     this.height = window.innerHeight - 20;
+    this.nEnemies = Math.floor(this.height / 100) - 2;
+    this.trump = this.createTrump();
   }
 
   createTrump() {
-    const size = this.height / 6;
+    const size = this.height / 7;
     const pos = [this.width / 5, this.height / 2 - size];
-    const trump = new _trump_js__WEBPACK_IMPORTED_MODULE_0__["default"]({ size, pos });
+    const trump = new _trump__WEBPACK_IMPORTED_MODULE_0__["default"]({ size, pos });
     return trump;
   }
 
@@ -254,15 +269,14 @@ class Game {
     const pos = [this.width, this.height];
     const topBot = this.generateEnemyPosition();
     const options = { pos, speed, topBot };
-    const enemy = new _enemy_js__WEBPACK_IMPORTED_MODULE_1__["default"](options);
+    const enemy = new _enemy__WEBPACK_IMPORTED_MODULE_1__["default"](options);
     this.enemies.push(enemy);
   }
 
   generateEnemyPosition() {
-    const height = this.height - 200;
-    const ratios = [0.25, 0.33, 0.5, 0.67, 0.75];
-    const ratio = ratios[Math.floor(Math.random() * ratios.length)];
-    const topBot = [height * ratio, height * (1 - ratio)];
+    const top = Math.floor(Math.random() * (this.nEnemies - 1)) + 1;
+    const bottom = this.nEnemies - top;
+    const topBot = [top, bottom];
     return topBot;
   }
 
@@ -291,6 +305,8 @@ class GameOver {
     this.game = game;
     this.image = new Image();
     this.image.src = './assets/gameover.png';
+    this.buttons = document.getElementsByTagName('button');
+    this.playView = document.getElementsByClassName('play-view')[0];
   }
 
   draw(ctx) {
@@ -316,15 +332,12 @@ class GameOver {
   }
 
   renderResetGame() {
-    const resetGame = document.getElementById('start-button');
-    const buttons = document.getElementsByTagName('button');
-    for (let i = 0; i < buttons.length; i++) {
-      buttons[i].classList.remove('hide');
-      buttons[i].setAttribute('class', 'show');
+    this.playView.setAttribute('id', 'hide');
+    for (let i = 0; i < this.buttons.length; i += 1) {
+      this.buttons[i].removeAttribute('id');
     }
-
-    resetGame.onclick = (e) => {
-      if (e.target === resetGame) {
+    this.buttons[0].onclick = (e) => {
+      if (e.target === e.currentTarget) {
         window.location.reload(true);
       }
     };
@@ -345,14 +358,14 @@ class GameOver {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _start_screen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./start_screen.js */ "./lib/start_screen.js");
-/* harmony import */ var _game_over_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game_over.js */ "./lib/game_over.js");
+/* harmony import */ var _start_screen__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./start_screen */ "./lib/start_screen.js");
+/* harmony import */ var _game_over__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game_over */ "./lib/game_over.js");
 
 
 
 class GameView {
   constructor(options) {
-    this.startScreen = new _start_screen_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.startScreen = new _start_screen__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.readyScreen = options.readyScreen;
     this.game = options.game;
     this.gameView = 0;
@@ -362,8 +375,6 @@ class GameView {
     this.bg2Pos = window.innerWidth - 20;
     this.background = new Image();
     this.backgroundFlipped = new Image();
-    this.enemy = new Image();
-    this.enemy.src = './assets/1.png';
     this.background.src = './assets/bg5.jpg';
     this.backgroundFlipped.src = './assets/bg5-flipped.jpg';
     this.gameOverSound = new Audio('./assets/audio/die.wav');
@@ -403,12 +414,6 @@ class GameView {
     this.startScreen.draw(ctx);
     this.game.trump.drawStart(ctx);
     this.game.trump.move();
-    ctx.drawImage(this.enemy, 100, 0, 100, 100);
-    ctx.drawImage(this.enemy, 100, 100, 100, 100);
-    ctx.drawImage(this.enemy, 100, 200, 100, 100);
-    ctx.drawImage(this.enemy, 100, 300, 100, 100);
-    ctx.drawImage(this.enemy, 100, 400, 100, 100);
-    ctx.drawImage(this.enemy, 100, 500, 100, 100);
   }
 
   renderStartGame() {
@@ -417,7 +422,7 @@ class GameView {
   }
 
   renderPlayScreen(ctx) {
-    for (let i = this.game.enemies.length - 1; i >= 0; i--) {
+    for (let i = this.game.enemies.length - 1; i >= 0; i -= 1) {
       this.game.trump.collided(this.game.enemies[0], window);
 
       this.game.enemies[i].draw(ctx);
@@ -456,15 +461,15 @@ class GameView {
 
   renderGameOver(ctx) {
     this.gameOverSound.play();
-    const gameOver = new _game_over_js__WEBPACK_IMPORTED_MODULE_1__["default"](this.score, this.game);
+    const gameOver = new _game_over__WEBPACK_IMPORTED_MODULE_1__["default"](this.score, this.game);
     this.speed = 0;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const animateCallBack = () => {
       this.frame = requestAnimationFrame(animateCallBack);
       this.renderBackground(ctx);
 
-      for (let i = this.game.enemies.length - 1; i >= 0; i--) {
+      for (let i = this.game.enemies.length - 1; i >= 0; i -= 1) {
         this.game.enemies[i].draw(ctx);
       }
       gameOver.draw(ctx);
@@ -473,10 +478,16 @@ class GameView {
   }
 
   addScore() {
-    if (this.game.trump.pos[0] > (this.game.enemies[0].x - this.game.enemies[0].width)
-      && this.game.trump.pos[0] < (this.game.enemies[0].x - this.game.enemies[0].width) + 5) {
+    const enemy = this.game.enemies[0];
+
+    if (enemy.defeated) {
       this.score += 1;
       this.pointSound.play();
+      enemy.defeated = null;
+    }
+
+    if (this.game.trump.pos[0] > (enemy.x + enemy.size) && enemy.defeated !== null) {
+      enemy.defeated = true;
     }
   }
 
@@ -574,7 +585,7 @@ class Trump {
     this.xPos = 0;
     this.moveCounter = 0;
     this.velocity = 0;
-    this.gravity = 0.4;
+    this.gravity = 0.35;
     this.lift = 8;
     this.width = window.innerWidth - 20;
     this.height = window.innerHeight - 20;
@@ -616,7 +627,7 @@ class Trump {
   }
 
   drawDead(ctx) {
-    ctx.drawImage(this.trumpDead, this.pos[0], this.pos[1], this.size, this.size);
+    ctx.drawImage(this.trumpDead, this.pos[0] - 20, this.pos[1] + 20, this.size, this.size);
   }
 
   move() {
@@ -636,6 +647,7 @@ class Trump {
       return this.velocity;
     }
     this.velocity = this.lift;
+    return this.velocity;
   }
 
   fall() {
@@ -653,8 +665,11 @@ class Trump {
   }
 
   collided(enemy) {
-    if (this.pos[0] + this.size - 25 > enemy.x && this.pos[0] + 100 < enemy.x + enemy.width) {
-      if (this.pos[1] + this.size - 20 > this.height - enemy.bottom || this.pos[1] + 20 < enemy.top) {
+    const enemyTop = enemy.top * enemy.size;
+    const enemyBot = enemy.bottom * enemy.size;
+    if (this.pos[0] + this.size - 25 > enemy.x && this.pos[0] + 100 < enemy.x + enemy.size) {
+      if (this.pos[1] + this.size - 20 > this.height - enemyBot
+        || this.pos[1] + 20 < enemyTop) {
         this.gameOver = true;
       }
     }
