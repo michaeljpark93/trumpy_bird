@@ -201,7 +201,7 @@ soundToggle.addEventListener('click', soundHandler, false);
 
 function playViewHandler(e) {
   if (e.target === e.currentTarget || e.which === 32) {
-    game.callJump();
+    game.trumpJump();
   }
 }
 
@@ -275,7 +275,7 @@ class Game {
   }
 
   createTrump() {
-    const size = this.height / 7;
+    const size = 90;
     const pos = [this.width / 5, this.height / 2 - size];
     const trump = new _trump__WEBPACK_IMPORTED_MODULE_0__["default"]({ size, pos });
     return trump;
@@ -307,7 +307,7 @@ class Game {
     return topBot;
   }
 
-  callJump() {
+  trumpJump() {
     this.trump.jump();
   }
 }
@@ -409,6 +409,7 @@ class GameView {
     this.gameOverSound = new Audio('./assets/audio/die.wav');
     this.pointSound = new Audio('./assets/audio/kaching.m4a');
     this.backgroundMusic = new Audio('./assets/audio/background.wav');
+    // this.jumpSound = new Audio('./assets/audio/jump.m4a');
     [this.restartGame] = document.getElementsByClassName('start');
   }
 
@@ -441,7 +442,10 @@ class GameView {
 
   gameStart() {
     this.gameView = 1;
-    if (this.sound) this.backgroundMusic.play();
+    if (this.sound) {
+      this.backgroundMusic.volume = 0.1;
+      this.backgroundMusic.play();
+    }
   }
 
   // Trumpy Bird intro screen view
@@ -496,7 +500,10 @@ class GameView {
   }
 
   renderGameOver(ctx) {
-    if (this.sound) this.gameOverSound.play();
+    if (this.sound) {
+      this.gameOverSound.volume = 0.2;
+      this.gameOverSound.play();
+    }
     const gameOver = new _game_over__WEBPACK_IMPORTED_MODULE_1__["default"](this.score, this.game);
     this.speed = 0;
 
@@ -517,11 +524,14 @@ class GameView {
 
     if (enemy && enemy.defeated) {
       this.score += 1;
-      if (this.sound) this.pointSound.play();
+      if (this.sound) {
+        this.pointSound.volume = 0.2;
+        this.pointSound.play();
+      }
       enemy.defeated = null;
     }
 
-    if (enemy && this.game.trump.pos[0] > (enemy.x + enemy.size) && enemy.defeated !== null) {
+    if (enemy && this.game.trump.pos[0] > (enemy.x + enemy.size - 10) && enemy.defeated !== null) {
       enemy.defeated = true;
     }
   }
@@ -534,6 +544,14 @@ class GameView {
     ctx.strokeText(this.score, window.innerWidth / 2 - 60, 100);
     ctx.fillText(this.score, window.innerWidth / 2 - 60, 100);
   }
+
+  // callJump() {
+  //   if (this.sound) {
+  //     this.jumpSound.volume = 0.1;
+  //     this.jumpSound.play();
+  //     this.game.trumpJump();
+  //   }
+  // }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (GameView);
