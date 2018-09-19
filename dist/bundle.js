@@ -408,7 +408,7 @@ class GameView {
     this.backgroundFlipped.src = './assets/bg5-flipped.jpg';
     this.gameOverSound = new Audio('./assets/audio/die.wav');
     this.pointSound = new Audio('./assets/audio/kaching.m4a');
-    this.backgroundMusic = new Audio('./assets/audio/background.wav');
+    this.backgroundMusic = new Audio('./assets/audio/background.m4a');
     // this.jumpSound = new Audio('./assets/audio/jump.m4a');
     [this.restartGame] = document.getElementsByClassName('start');
   }
@@ -501,7 +501,7 @@ class GameView {
 
   renderGameOver(ctx) {
     if (this.sound) {
-      this.gameOverSound.volume = 0.2;
+      this.gameOverSound.volume = 0.1;
       this.gameOverSound.play();
     }
     const gameOver = new _game_over__WEBPACK_IMPORTED_MODULE_1__["default"](this.score, this.game);
@@ -525,7 +525,7 @@ class GameView {
     if (enemy && enemy.defeated) {
       this.score += 1;
       if (this.sound) {
-        this.pointSound.volume = 0.2;
+        this.pointSound.volume = 0.12;
         this.pointSound.play();
       }
       enemy.defeated = null;
