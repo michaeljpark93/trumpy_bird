@@ -103,8 +103,16 @@ class Enemy {
     this.speed = options.speed;
     this.defeated = false;
     this.height = window.innerHeight - 20;
-    this.enemy = new Image();
-    this.enemy.src = './assets/1.png';
+    this.enemy1 = new Image();
+    this.enemy1.src = './assets/1.png';
+    this.enemy2 = new Image();
+    this.enemy2.src = './assets/2.png';
+    this.enemy3 = new Image();
+    this.enemy3.src = './assets/3.png';
+    this.enemy4 = new Image();
+    this.enemy4.src = './assets/4.png';
+    this.enemies = [this.enemy1, this.enemy2, this.enemy3, this.enemy4];
+    this.color = this.enemies[options.color];
   }
 
   draw(ctx) {
@@ -115,14 +123,14 @@ class Enemy {
   generateTop(ctx) {
     for (let i = 0; i < this.top; i += 1) {
       const yPos = i * this.size;
-      ctx.drawImage(this.enemy, this.x, yPos, this.size, this.size);
+      ctx.drawImage(this.color, this.x, yPos, this.size, this.size);
     }
   }
 
   generateBot(ctx) {
     for (let i = 0; i < this.bottom; i += 1) {
       const yPos = i * this.size;
-      ctx.drawImage(this.enemy, this.x, this.height - this.size - yPos, this.size, 110);
+      ctx.drawImage(this.color, this.x, this.height - this.size - yPos, this.size, 110);
     }
   }
 
@@ -268,7 +276,10 @@ class Game {
   createEnemy(speed) {
     const pos = [this.width, this.height];
     const topBot = this.generateEnemyPosition();
-    const options = { pos, speed, topBot };
+    const color = Math.floor(Math.random() * 4);
+    const options = {
+      pos, speed, topBot, color,
+    };
     const enemy = new _enemy__WEBPACK_IMPORTED_MODULE_1__["default"](options);
     this.enemies.push(enemy);
   }
@@ -384,7 +395,6 @@ class GameView {
 
   start(canvasEl) {
     const ctx = canvasEl.getContext('2d');
-    this.backgroundMusic.play();
 
     const animateCallback = () => {
       this.frame = requestAnimationFrame(animateCallback);
@@ -407,6 +417,7 @@ class GameView {
 
   gameStart() {
     this.gameView = 1;
+    this.backgroundMusic.play();
   }
 
   // Trumpy Bird intro screen view
