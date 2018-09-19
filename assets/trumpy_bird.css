@@ -24,6 +24,27 @@ time, mark, audio, video {
 	font: inherit;
 }
 
+.volume {
+  position: fixed;
+  top: 30px;
+  right: 80px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  background-size: 100%;
+	background-repeat: no-repeat;
+  background-position: center center;
+  cursor: pointer;
+}
+
+#on {
+  background-image: url("on.png")
+}
+
+#off {
+  background-image: url("off.png")
+}
+
 .main {
 	display: flex;
 	justify-content: center;

@@ -173,15 +173,31 @@ const game = new _game__WEBPACK_IMPORTED_MODULE_2__["default"]();
 const options = { canvasEl, game };
 const readyScreen = new _ready_screen__WEBPACK_IMPORTED_MODULE_1__["default"](options);
 
-const gameViewOptions = { game, readyScreen };
+const gameViewOptions = { game, readyScreen, canvasEl };
 const gameView = new _game_view__WEBPACK_IMPORTED_MODULE_0__["default"](gameViewOptions);
-gameView.start(canvasEl);
+gameView.start();
 
 let startRV = false;
 let startPV = false;
 const startGame = document.getElementsByClassName('start')[0];
 const readyView = document.getElementsByClassName('ready-view')[0];
 const playView = document.getElementsByClassName('play-view')[0];
+const soundToggle = document.getElementsByClassName('volume')[0];
+
+function soundHandler(e) {
+  if (e.target === e.currentTarget) {
+    gameView.sound = !gameView.sound;
+
+    soundToggle.removeAttribute('id');
+    if (gameView.sound) {
+      soundToggle.setAttribute('id', 'on');
+    } else {
+      soundToggle.setAttribute('id', 'off');
+    }
+  }
+}
+
+soundToggle.addEventListener('click', soundHandler, false);
 
 function playViewHandler(e) {
   if (e.target === e.currentTarget || e.which === 32) {
@@ -317,7 +333,7 @@ class GameOver {
     this.image = new Image();
     this.image.src = './assets/gameover.png';
     this.buttons = document.getElementsByTagName('button');
-    this.playView = document.getElementsByClassName('play-view')[0];
+    [this.playView] = document.getElementsByClassName('play-view');
   }
 
   draw(ctx) {
@@ -379,9 +395,11 @@ class GameView {
     this.startScreen = new _start_screen__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.readyScreen = options.readyScreen;
     this.game = options.game;
+    this.canvasEl = options.canvasEl;
     this.gameView = 0;
     this.score = 0;
-    this.speed = 7;
+    this.speed = 6.5;
+    this.sound = true;
     this.bgPos = 0;
     this.bg2Pos = window.innerWidth - 20;
     this.background = new Image();
@@ -391,10 +409,11 @@ class GameView {
     this.gameOverSound = new Audio('./assets/audio/die.wav');
     this.pointSound = new Audio('./assets/audio/kaching.m4a');
     this.backgroundMusic = new Audio('./assets/audio/background.wav');
+    [this.restartGame] = document.getElementsByClassName('start');
   }
 
-  start(canvasEl) {
-    const ctx = canvasEl.getContext('2d');
+  start() {
+    const ctx = this.canvasEl.getContext('2d');
 
     const animateCallback = () => {
       this.frame = requestAnimationFrame(animateCallback);
@@ -403,6 +422,7 @@ class GameView {
       switch (this.gameView) {
         case 1:
           this.readyScreen.draw();
+          this.soundHandler();
           break;
         case 2:
           this.renderPlayScreen(ctx);
@@ -415,9 +435,13 @@ class GameView {
     animateCallback();
   }
 
+  soundHandler() {
+    if (!this.sound) this.backgroundMusic.pause();
+  }
+
   gameStart() {
     this.gameView = 1;
-    this.backgroundMusic.play();
+    if (this.sound) this.backgroundMusic.play();
   }
 
   // Trumpy Bird intro screen view
@@ -430,6 +454,7 @@ class GameView {
   renderStartGame() {
     this.gameView = 2;
     this.game.createEnemies(this.speed);
+    this.game.trump.jump();
   }
 
   renderPlayScreen(ctx) {
@@ -439,7 +464,7 @@ class GameView {
       this.game.enemies[i].draw(ctx);
       this.game.enemies[i].update(this.speed);
 
-      if (this.game.enemies[i].beaten()) {
+      if (this.game.enemies.length > 0 && this.game.enemies[i].beaten()) {
         this.game.enemies.splice(i, 1);
       }
     }
@@ -471,10 +496,9 @@ class GameView {
   }
 
   renderGameOver(ctx) {
-    this.gameOverSound.play();
+    if (this.sound) this.gameOverSound.play();
     const gameOver = new _game_over__WEBPACK_IMPORTED_MODULE_1__["default"](this.score, this.game);
     this.speed = 0;
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const animateCallBack = () => {
       this.frame = requestAnimationFrame(animateCallBack);
@@ -491,13 +515,13 @@ class GameView {
   addScore() {
     const enemy = this.game.enemies[0];
 
-    if (enemy.defeated) {
+    if (enemy && enemy.defeated) {
       this.score += 1;
-      this.pointSound.play();
+      if (this.sound) this.pointSound.play();
       enemy.defeated = null;
     }
 
-    if (this.game.trump.pos[0] > (enemy.x + enemy.size) && enemy.defeated !== null) {
+    if (enemy && this.game.trump.pos[0] > (enemy.x + enemy.size) && enemy.defeated !== null) {
       enemy.defeated = true;
     }
   }
@@ -541,10 +565,10 @@ class ReadyScreen {
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 8;
     ctx.fillStyle = 'white';
-    ctx.strokeText('Click to start', window.innerWidth / 2 - 140, window.innerHeight / 1.8);
-    ctx.fillText('Click to start', window.innerWidth / 2 - 140, window.innerHeight / 1.8);
-    ctx.strokeText('Press space to jump', window.innerWidth / 2 - 210, window.innerHeight / 1.55);
-    ctx.fillText('Press space to jump', window.innerWidth / 2 - 210, window.innerHeight / 1.55);
+    ctx.strokeText('Press Space or', window.innerWidth / 2 - 155, window.innerHeight / 1.8);
+    ctx.fillText('Press Space or', window.innerWidth / 2 - 155, window.innerHeight / 1.8);
+    ctx.strokeText('Click to jump', window.innerWidth / 2 - 140, window.innerHeight / 1.55);
+    ctx.fillText('Click to jump', window.innerWidth / 2 - 140, window.innerHeight / 1.55);
     this.game.trump.draw(ctx);
     this.game.trump.move();
   }
