@@ -1,0 +1,62 @@
+# Trumpy Bird
+
+[Link to Live Site](https://michaeljpark93.github.io/trumpy_bird)
+
+Trumpy Bird is a parody of the notorious Flappy Bird game developed with JavaScript and HTML5 Canvas. The objective of the game is to avoid obstacles by jumping through the openings.
+
+The project was designed and built within a one-week timeframe.
+
+![alt text][logo]
+[logo]: https://github.com/michaeljpark93/trumpy_bird/tree/master/assets/README/start_page.gif
+
+## Features
+
+### Board Creating and Binging
+
+Boards are a way for users to make collections of their favorite binges. Boards can categorized for easy organization and search. A single modal component can be used for all binge/board-related tasks:
+
+```js
+function Modal({modal, closeModal}) {
+  if (!modal) {
+    return null;
+  }
+  let component;
+  switch (modal) {
+    case 'createBoard':
+      component = <BoardFormContainer cancel={closeModal}/>;
+      break;
+    case 'editBoard':
+      component = <BoardUpdateContainer cancel={closeModal}/>;
+      break;
+    case 'createBinge':
+      component = <BingeFormContainer cancel={closeModal}/>;
+      break;
+    case 'editBinge':
+      component = <BingeUpdateContainer cancel={closeModal}/>;
+      break;
+    case 'createBinging':
+      component = <BingingFormContainer cancel={closeModal}/>;
+      break;
+    default:
+      return null;
+  }
+  return (
+    <div className="modal-background" onClick={closeModal}>
+      <div className="modal-child" onClick={e => e.stopPropagation()}>
+        { component }
+      </div>
+    </div>
+  );
+}
+```
+
+### Adaptive Feed
+
+The discover feed dynamically adapts to display all binges in an aesthetic manner through a masonry layout. The number of columns are calculated based on screen size and can accommodate a variety of devices.
+
+![Discover Feed](https://s3-us-west-1.amazonaws.com/bingeterest-dev/README/discover_feed.gif)
+
+## Possible future features
+  * Search
+  * Private Boards
+  * Likes
