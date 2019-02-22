@@ -9,7 +9,7 @@ This rendition of the notorious game Flappy Bird, called Trumpy Bird, is a brows
 ![Gameplay](/assets/gameplay.gif)
 
 ### Collision Detection
-```
+```js
   collided(enemy) {
     const enemyTop = enemy.top * enemy.size;
     const enemyBot = enemy.bottom * enemy.size;
@@ -24,7 +24,7 @@ This rendition of the notorious game Flappy Bird, called Trumpy Bird, is a brows
 Whenever the Trump sprite collides with an obstacle the game will automatically end and trigger the game over screen.
 
 ### Custom Event Handling
-```
+```js
   const startGameFunction = (e) => {
     if (e.target === e.currentTarget) {
       startRV = true;
